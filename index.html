@@ -121,13 +121,58 @@ ITM 0
 01000010
 01111110
 00000000
-NAME treasure
+NAME treasure_0
 DLG ITM_0
+
+ITM 1
+10000000
+00111100
+01000010
+01111110
+01011010
+01000010
+01111110
+00000000
+NAME treasure_1
+DLG ITM_1
+
+ITM 2
+01000000
+00111100
+01000010
+01111110
+01011010
+01000010
+01111110
+00000000
+NAME treasure_2
+DLG ITM_2
+
+ITM 3
+00100000
+00111100
+01000010
+01111110
+01011010
+01000010
+01111110
+00000000
+NAME treasure_3
+DLG ITM_3
 
 DLG SPR_0
 I'm a cat
 
 DLG ITM_0
+its a treasure!
+
+DLG ITM_1
+its a treasure!
+
+DLG ITM_2
+its a treasure!
+
+DLG ITM_3
 its a treasure!
 
 VAR a
@@ -4206,8 +4251,6 @@ var DialogRenderer = function() {
 							textboxInfo.img.data[pxl+3] = char.color.a;
 						}
 					}
-
-					
 				}
 			}
 		}
