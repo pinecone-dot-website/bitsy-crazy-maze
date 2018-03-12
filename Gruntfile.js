@@ -36,7 +36,7 @@ module.exports = function (grunt) {
 
         zip: {
             dist: {
-                dest: `dest/all-${date}.zip`,
+                dest: `dist/all-${date}.zip`,
                 src: [
                     'index.html',
                     'css/**',
