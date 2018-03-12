@@ -41,17 +41,22 @@ function position_exits() {
  * 
  */
 function position_items() {
+    let threshold = .5;
+
+    // reset
     room[ _maze_room ].items = [];
 
-    for ( var i = 0; i <= 3; i++ ) {
-        x = ( ( Math.random() * 4 ).toFixed() * 2 ) + room_offset.x;
-        y = ( ( Math.random() * 4 ).toFixed() * 2 ) + room_offset.y;
+    for ( let i = 0; i <= 3; i++ ) {
+        if ( Math.random() > threshold ) {
+            x = ( ( Math.random() * 4 ).toFixed() * 2 ) + room_offset.x;
+            y = ( ( Math.random() * 4 ).toFixed() * 2 ) + room_offset.y;
 
-        room[ _maze_room ].items.push( {
-            id: i,
-            x: x,
-            y: y
-        } );
+            room[ _maze_room ].items.push( {
+                id: i,
+                x: x,
+                y: y
+            } );
+        }
     }
 }
 
@@ -66,20 +71,31 @@ function position_player() {
         player().x = 12 + room_offset.x;
         player().y = 12 + room_offset.y;
     }
-
 }
 
 /**
  * 
  */
 function position_sprites() {
-    x = ( ( Math.random() * 4 ).toFixed() * 2 ) + room_offset.x + 1;
-    y = ( ( Math.random() * 4 ).toFixed() * 2 ) + room_offset.y + 1;
+    let sprites = [ 'b', 'c' ];
+    let threshold = .75;
 
-    sprite.b.room = _maze_room;
-    sprite.b.x = x;
-    sprite.b.y = y;
+    for ( let i = 0; i <= 1; i++ ) {
+        let e = sprites[ i ];
+
+        if ( Math.random() > threshold ) {
+            x = ( ( Math.random() * 4 ).toFixed() * 2 ) + room_offset.x + 1;
+            y = ( ( Math.random() * 4 ).toFixed() * 2 ) + room_offset.y + 1;
+
+            sprite[ e ].room = _maze_room;
+            sprite[ e ].x = x;
+            sprite[ e ].y = y;
+        } else {
+            sprite[ e ].room = 100;
+        }
+    }
 }
+window.position_sprites = position_sprites;
 
 /**
  * make map tiles
@@ -129,10 +145,13 @@ function on_interval() {
     // pause updater
     clearInterval( update_interval );
 
+    // set new variables
     room_offset = {
         x: Math.round( Math.random() ) + 1,
         y: Math.round( Math.random() ) + 1
     };
+
+
 
     // make map tiles
     position_tilemap();
@@ -199,7 +218,7 @@ window.populate_item_dialogs = populate_item_dialogs;
  * 
  */
 function populate_sprite_dialogs() {
-    for ( var i = 1; i <= 1; i++ ) {
+    for ( var i = 1; i <= 2; i++ ) {
         let id = `SPR_${i}`;
         let text = mkv_sprite.generate();
         dialog[ id ] = text;
