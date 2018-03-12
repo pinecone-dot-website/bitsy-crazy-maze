@@ -2717,11 +2717,12 @@ var Interpreter = function() {
 	var env = new Environment();
 	var parser = new Parser( env );
 
-	this.SetDialogBuffer = function(buffer) { env.SetDialogBuffer( buffer ); };
+	this.SetDialogBuffer = function(buffer) { 
+		env.SetDialogBuffer( buffer ); 
+		};
 
 	// TODO -- maybe this should return a string instead othe actual script??
 	this.Compile = function(scriptName, scriptStr) {
-		// console.log("COMPILE");
 		var script = parser.Parse( scriptStr );
 		env.SetScript( scriptName, script );
 	}
@@ -3622,11 +3623,12 @@ var Parser = function(env) {
 				}
 			}
 
-			// console.log("!!! " + startIndex + " " + i);
-
 			return sourceStr.slice( startIndex + open.length, i - close.length );
 		}
-		this.Print = function() {console.log(sourceStr);};
+
+		this.Print = function() {
+			//console.log(sourceStr);
+		};
 	};
 
 	function ParseDialog(state) {
@@ -3638,15 +3640,10 @@ var Parser = function(env) {
 		var hasDialog = false;
 		var isFirstLine = true;
 
-		// console.log("---- PARSE DIALOG ----");
-
 		var text = "";
 		var addTextNode = function() {
 			// console.log("TEXT " + text.length);
 			if (text.length > 0) {
-				// console.log("TEXT " + text);
-				// console.log("text!!");
-				// console.log([text]);
 
 				state.curNode.AddChild( new FuncNode( "say", [new LiteralNode(text)] ) );
 				text = "";
@@ -3660,8 +3657,6 @@ var Parser = function(env) {
 			if( state.MatchAhead(Sym.CodeOpen) ) {
 				addTextNode();
 				state = ParseCodeBlock( state );
-
-				// console.log("CODE");
 
 				var len = state.curNode.children.length;
 				if(len > 0 && state.curNode.children[len-1].type === "block") {
@@ -3696,8 +3691,7 @@ var Parser = function(env) {
 					- NEVER line break on the last line
 					*/
 					var isLastLine = (state.Index() + 1) == state.Count();
-					// console.log("block " + hasBlock);
-					// console.log("dialog " + hasDialog);
+					
 					var isEmptyLine = !hasBlock && !hasDialog;
 					// console.log("empty " + isEmptyLine);
 					var isValidEmptyLine = isEmptyLine && !(isFirstLine || isLastLine);
@@ -3727,9 +3721,6 @@ var Parser = function(env) {
 		}
 		addTextNode();
 
-		// console.log("---- PARSE DIALOG ----");
-
-		// console.log(state);
 		return state;
 	}
 
@@ -4333,7 +4324,6 @@ var DialogBuffer = function() {
 	};
 
 	this.DoNextChar = function() {
-		// console.log("DO NEXT CHAR");
 
 		nextCharTimer = 0; //reset timer
 
@@ -4351,11 +4341,8 @@ var DialogBuffer = function() {
 			//the page is full!
 			isDialogReadyToContinue = true;
 			didPageFinishThisFrame = true;
-
-			// console.log("WAITING FOR INPUT");
 		}
 
-		// console.log(this.CurChar());
 		if(this.CurChar() != null)
 			this.CurChar().OnPrint(); // make sure we hit the callback before we run out of text
 	};
@@ -4376,7 +4363,6 @@ var DialogBuffer = function() {
 	};
 
 	this.Skip = function() {
-		console.log("SKIPPP");
 		didPageFinishThisFrame = false;
 		didFlipPageThisFrame = false;
 		// add new characters until you get to the end of the current line of dialog
@@ -4402,12 +4388,10 @@ var DialogBuffer = function() {
 	}
 
 	this.EndDialog = function() {
-		console.log("END!!!!");
 		isActive = false; // no more text to show... this should be a sign to stop rendering dialog
 	}
 
 	this.Continue = function() {
-		console.log("CONTINUE");
 		if (pageIndex + 1 < this.CurPageCount()) {
 			//start next page
 			this.FlipPage();
@@ -4451,7 +4435,6 @@ var DialogBuffer = function() {
 		}
 		this.OnPrint = function() {
 			if (printHandler != null) {
-				console.log("PRINT HANDLER ---- DIALOG BUFFER");
 				printHandler();
 				printHandler = null; // only call handler once (hacky)
 			}
@@ -4467,8 +4450,6 @@ var DialogBuffer = function() {
 
 	var charsPerRow = 32;
 	this.AddText = function(textStr,onFinishHandler) {
-		console.log("ADD TEXT " + textStr);
-
 		//process dialog so it's easier to display
 		var words = textStr.split(" ");
 
@@ -4524,15 +4505,12 @@ var DialogBuffer = function() {
 			lastChar.SetPrintHandler( onFinishHandler );
 		}
 
-		console.log(buffer);
-
 		isActive = true;
 	};
 
 	this.AddLinebreak = function() {
 		var lastPage = buffer[ buffer.length-1 ];
 		if( lastPage.length <= 1 ) {
-			console.log("LINEBREAK - NEW ROW ");
 			// add new row
 			lastPage.push( [] );
 		}
@@ -4540,7 +4518,6 @@ var DialogBuffer = function() {
 			// add new page
 			buffer.push( [[]] );
 		}
-		console.log(buffer);
 
 		isActive = true;
 	}
@@ -4583,7 +4560,7 @@ var ColorEffect = function(index) {
 	this.DoEffect = function(char) {
 		var pal = getPal( curPal() );
 		var color = pal[ parseInt( index ) ];
-		console.log(color);
+
 		char.color.r = color[0];
 		char.color.g = color[1];
 		char.color.b = color[2];
@@ -4770,7 +4747,6 @@ var isPlayerEmbeddedInEditor = false;
 
 function getGameNameFromURL() {
 	var game = window.location.hash.substring(1);
-	// console.log("game name --- " + game);
 	return game;
 }
 
@@ -4787,13 +4763,12 @@ function load_game(game_data, startWithTitle) {
 	curGameData = game_data; //remember the current game (used to reset the game)
 	dialogBuffer.Reset();
 	scriptInterpreter.ResetEnvironment(); // ensures variables are reset -- is this the best way?
-	// console.log(dialog);
+
 	parseWorld(game_data);
-	// console.log(dialog);
+
 	setInitialVariables();
 	renderImages();
 	onready(startWithTitle);
-	// console.log(dialog);
 }
 
 function reset_cur_game() {
@@ -4938,17 +4913,10 @@ function breadthFirstSearch(map, from, to) {
 	var queue = [from];
 	visited.push( posToString(from) );
 
-	//console.log( "~ bfs ~");
-	//console.log( posToString(from) + " to " + posToString(to) );
-
 	while ( queue.length > 0 ) {
 
 		//grab pos from queue and mark as visited
 		var curPos = queue.shift();
-
-		//console.log( posToString(curPos) );
-		//console.log( ".. " + pathToString(curPos.trail) );
-		//console.log( visited );
 
 		if (curPos.x == to.x && curPos.y == to.y) {
 			//found a path!
@@ -5414,8 +5382,6 @@ function movePlayer(direction) {
 	// do items first, because you can pick up an item AND go through a door
 	if (itmIndex > -1) {
 		// TODO pick up items (what about touch?)
-		// console.log("HIT ITM ");
-		// console.log( itmIndex );
 		var itm = room[ player().room ].items[ itmIndex ];
 		// console.log(itm);
 		room[ player().room ].items.splice( itmIndex, 1 );
@@ -5447,7 +5413,6 @@ function movePlayer(direction) {
 }
 
 function onkeyup(e) {
-
 	if(e.keyCode == key.left || e.keyCode == key.right || e.keyCode == key.up || e.keyCode == key.down || !isPlayerEmbeddedInEditor)
 		e.preventDefault();
 
@@ -5457,11 +5422,6 @@ function onkeyup(e) {
 	// todo is this robust enough?
 	if( keyDownList.length <= 0 )
 		curPlayerDirection = Direction.None;
-
-	console.log(e.keyCode);
-	console.log("KEY UP " + keyDownList.length );
-	console.log(keyDownList);
-	console.log("_____");
 }
 
 var touchInfo = {
@@ -5478,13 +5438,8 @@ function ontouchstart(e) {
 	if( e.changedTouches.length > 0 ) {
 		touchInfo.isDown = true;
 
-		console.log(e);
-
 		touchInfo.startX = touchInfo.curX = e.changedTouches[0].clientX;
 		touchInfo.startY = touchInfo.curY = e.changedTouches[0].clientY;
-
-		console.log("MOUSE DOWN");
-		console.log(touchInfo);
 
 		curPlayerDirection = Direction.None;
 	}
@@ -5494,16 +5449,11 @@ var swipeDistance = 30;
 function ontouchmove(e) {
 	e.preventDefault();
 
-	console.log("MOUSE MOVE");
-	console.log(touchInfo);
-
 	if( !dialogBuffer.IsActive() && touchInfo.isDown && e.changedTouches.length > 0 ) {
 		touchInfo.curX = e.changedTouches[0].clientX;
 		touchInfo.curY = e.changedTouches[0].clientY;
 
 		var prevDirection = curPlayerDirection;
-
-		console.log( touchInfo.curX - touchInfo.startX );
 
 		if( touchInfo.curX - touchInfo.startX <= -swipeDistance ) {
 			curPlayerDirection = Direction.Left;
@@ -5530,9 +5480,6 @@ function ontouchmove(e) {
 
 function ontouchend(e) {
 	e.preventDefault();
-
-	console.log("MOUSE UP");
-	console.log(touchInfo);
 
 	touchInfo.isDown = false;
 
@@ -5943,7 +5890,6 @@ function placeSprites() {
 		sprite[id].room = spriteStartLocations[id].room;
 		sprite[id].x = spriteStartLocations[id].x;
 		sprite[id].y = spriteStartLocations[id].y;
-		//console.log(sprite[id]);
 	}
 }
 
@@ -5971,7 +5917,6 @@ function parseTitle(lines, i) {
 }
 
 function parseRoom(lines, i) {
-	console.log( 'parseRoom', arguments );
 	var id = getId(lines[i]);
 	room[id] = {
 		id : id,
@@ -6013,7 +5958,6 @@ function parseRoom(lines, i) {
 	}
 
 	while (i < lines.length && lines[i].length > 0) { //look for empty line
-		// console.log(getType(lines[i]));
 		if (getType(lines[i]) === "SPR") {
 			/* NOTE SPRITE START LOCATIONS */
 			var sprId = getId(lines[i]);
@@ -6130,7 +6074,6 @@ function parsePalette(lines,i) { //todo this has to go first right now :(
 }
 
 function parseTile(lines, i) {
-	console.log('parseTile', arguments);
 	var id = getId(lines[i]);
 	var drwId = null;
 	var name = null;
@@ -6660,9 +6603,17 @@ function startNarrating(dialogStr,end) {
 	startDialog(dialogStr);
 }
 
+/**
+ * 
+ */
 function startItemDialog(itemId) {
+	//console.log('startItemDialog itemId:', itemId);
 	var dialogId = item[itemId].dlg;
+
 	// console.log("START ITEM DIALOG " + dialogId);
+	//console.log( 'startItemDialog dialogId:', dialogId );
+	console.log( 'startItemDialog dialog[dialogId]:', dialog[dialogId] );
+
 	if(dialog[dialogId]){
 		var dialogStr = dialog[dialogId];
 		startDialog(dialogStr,dialogId);
@@ -6680,6 +6631,8 @@ function startSpriteDialog(spriteId) {
 }
 
 function startDialog(dialogStr,scriptId) {
+	console.log('startDialog', arguments );
+
 	if(dialogStr.length <= 0) {
 		console.log("ON EXIT DIALOG -- startDialog 1");
 		onExitDialog();
@@ -6706,6 +6659,7 @@ function startDialog(dialogStr,scriptId) {
 	else {
 		if( !scriptInterpreter.HasScript(scriptId) )
 			scriptInterpreter.Compile( scriptId, dialogStr );
+
 		scriptInterpreter.Run( scriptId, onScriptEnd );
 	}
 
