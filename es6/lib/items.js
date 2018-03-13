@@ -29,9 +29,6 @@ module.exports = {
     position: function( _cur_room, room_offset ) {
         let threshold = .5;
 
-        // reset
-        room[ _cur_room ].items = [];
-
         item_tiles.forEach( ( tile, i ) => {
             if ( Math.random() > threshold ) {
                 x = ( ( Math.random() * 4 ).toFixed() * 2 ) + room_offset.x;
