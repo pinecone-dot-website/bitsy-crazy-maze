@@ -47,7 +47,7 @@ function position_player() {
 function interval_callback() {
     // sanity check
     if ( !room[ _cur_room ] ) {
-        //alert( "_cur_room not set!?!? : "+JSON.stringify(_cur_room) );
+        alert( "_cur_room not set!?!? : "+JSON.stringify(_cur_room) );
         _cur_room = null;
         return;
     }

@@ -17,6 +17,9 @@ module.exports = {
         }
     },
 
+    /**
+     * 
+     */
     draw_map: function( _cur_room, room_offset ) {
         // the map
         let map_gen = generator( 7 );
