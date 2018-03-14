@@ -21,7 +21,7 @@ module.exports = {
 
             //responsiveVoice.speak( text );
 
-            console.log( 'populate_sprite_dialogs', id, dialog[ id ] );
+            //console.log( 'populate_sprite_dialogs', id, dialog[ id ] );
         } );
     },
 

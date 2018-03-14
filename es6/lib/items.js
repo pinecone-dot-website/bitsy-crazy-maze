@@ -12,14 +12,22 @@ module.exports = {
      * 
      */
     populate_dialogs: function() {
+        let dialogs = [];
+        
+        // this avoids any empty dialogs
+        while( dialogs.length < item_tiles.length ){
+            let text = markov.item().generate().cm_trim();
+            
+            if(text.length){
+                dialogs.push(text);
+            }
+        }
+
         item_tiles.forEach( ( e, i ) => {
             let id = `ITM_${i}`;
-            let text = markov.item().generate().cm_trim();
-
-            window.dialog[ id ] = text;
-            window.scriptInterpreter.Compile( id, text );
-
-            console.log( 'populate_item_dialogs', id, dialog[ id ] );
+            
+            window.dialog[ id ] = dialogs[i];
+            window.scriptInterpreter.Compile( id, dialogs[i] );
         } );
     },
 
