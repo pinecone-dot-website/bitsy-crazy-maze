@@ -4,12 +4,6 @@ let items = require( './lib/items.js' ),
     sprites = require( './lib/sprites.js' ),
     tiles = require( './lib/tiles.js' );
 
-// offset for tiles, 1 or 2
-let room_offset = {
-    x: Math.round( Math.random() ) + 1,
-    y: Math.round( Math.random() ) + 1
-};
-
 // compared with global curRoom var
 let _cur_room = null;
 
@@ -54,7 +48,7 @@ function interval_callback() {
  * 
  */
 function game_interval() {
-    if ( curRoom && ( _cur_room !== curRoom ) ) {
+    if ( _cur_room !== curRoom ) {
         _cur_room = curRoom;
 
         interval_callback();
@@ -66,16 +60,12 @@ function game_interval() {
  */
 function bootstrap() {
     if ( curRoom && ( _cur_room !== curRoom ) ) {
-        _cur_room = curRoom;
-
         // run once stuff here
         room_.draw_border( 0 );
         room_.draw_border( 1 );
         room[ 0 ].room_offset = room_.generate_offset();
-        
-        // normal below
-        interval_callback();
 
+        // set the real interval
         clearInterval( bootstrap_interval );
         setInterval( game_interval, 50 );
     }
