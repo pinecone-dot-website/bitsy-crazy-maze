@@ -19,7 +19,7 @@ module.exports = {
             window.dialog[ id ] = text;
             window.scriptInterpreter.Compile( id, text );
 
-            //console.log( 'populate_item_dialogs', id, dialog[ id ] );
+            console.log( 'populate_item_dialogs', id, dialog[ id ] );
         } );
     },
 

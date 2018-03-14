@@ -47,6 +47,21 @@ module.exports = {
 
     /**
      * 
+     * @return object x and y coords, each is 1 or 2
+     */
+    generate_offset: function() {
+        let offset = {
+            x: Math.round( Math.random() ) + 1,
+            y: Math.round( Math.random() ) + 1
+        };
+
+        console.log( 'generate_offset', offset );
+        return offset;
+    },
+
+    /**
+     * 
+     * @return object x and y
      */
     position_exits: function( _cur_room, room_offset ) {
         let x, y;
@@ -64,8 +79,6 @@ module.exports = {
             room[ _cur_room ].tilemap[ y ][ x ] = "g";
         }
 
-        //alert(x+' : '+y);
-
         room[ _cur_room ].exits[ 0 ].x = x;
         room[ _cur_room ].exits[ 0 ].y = y;
 
@@ -75,5 +88,28 @@ module.exports = {
             x: x,
             y: y
         } );
+
+        return {
+            x: x,
+            y: y
+        }
+    },
+
+    /**
+     * 
+     * @param object x y
+     * @return
+     */
+    position_player: function( room_offset ) {
+        // 
+        let check = {
+            x: ( player().x - room_offset.x ) > 1 ? 12 : 0,
+            y: ( player().y - room_offset.y ) > 1 ? 12 : 0
+        };
+
+        console.log( 'position_player check', check, room_offset );
+
+        player().x = check.x += room_offset.x
+        player().y = check.y += room_offset.y
     }
 }
