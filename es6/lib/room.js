@@ -64,35 +64,40 @@ module.exports = {
      * @return object x and y
      */
     position_exits: function( _cur_room, room_offset ) {
-        let x, y;
+        let check = {
+            x: ( player().x - room_offset.x ) > 1 ? 12 : 0,
+            y: ( player().y - room_offset.y ) > 1 ? 12 : 0
+        };
+
+        let new_exit = Object.assign( {}, check );
+
+        while ( ( check.x == new_exit.x ) && ( check.y == new_exit.y ) ) {
+            new_exit.x = Math.round( Math.random() ) * 12;
+            new_exit.y = Math.round( Math.random() ) * 12;
+        }
+
+        new_exit.x += room_offset.x;
+        new_exit.y += room_offset.y;
+
+        room[ _cur_room ].exits[ 0 ].x = new_exit.x;
+        room[ _cur_room ].exits[ 0 ].y = new_exit.y;
+
+        room[ _cur_room ].exits[ 0 ].dest.x = new_exit.x;
+        room[ _cur_room ].exits[ 0 ].dest.y = new_exit.y;
+
+        let exit = {
+            id: 4,
+            x: new_exit.x,
+            y: new_exit.y
+        };
 
         // reset items on new map creation
         room[ _cur_room ].items = [];
 
-        if ( _cur_room == "0" ) {
-            x = 12 + room_offset.x;
-            y = 12 + room_offset.y;
-            room[ _cur_room ].tilemap[ y ][ x ] = "g";
-        } else {
-            x = room_offset.x;
-            y = room_offset.y;
-            room[ _cur_room ].tilemap[ y ][ x ] = "g";
-        }
-
-        room[ _cur_room ].exits[ 0 ].x = x;
-        room[ _cur_room ].exits[ 0 ].y = y;
-
         // show item for door
-        room[ _cur_room ].items.push( {
-            id: 4,
-            x: x,
-            y: y
-        } );
+        room[ _cur_room ].items.push( exit );
 
-        return {
-            x: x,
-            y: y
-        }
+        return exit;
     },
 
     /**
