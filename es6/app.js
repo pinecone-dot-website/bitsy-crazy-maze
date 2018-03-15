@@ -25,6 +25,10 @@ function interval_callback() {
     let room_offset = room_.generate_offset();
     room[ _cur_room ].room_offset = room_offset;
 
+    if ( palette.hasOwnProperty( room[ _cur_room ].pal + 2 ) ) {
+        room[ _cur_room ].pal += 2
+    }
+
     // make map tiles and place exits
     room_.draw_map( _cur_room, room_offset );
     room_.position_exits( _cur_room, room_offset );
@@ -64,6 +68,10 @@ function bootstrap() {
         room_.draw_border( 0 );
         room_.draw_border( 1 );
         room[ 0 ].room_offset = room_.generate_offset();
+
+        // booo these are set as strings
+        room[ 0 ].pal = 0;
+        room[ 1 ].pal = 1;
 
         // set the real interval
         clearInterval( bootstrap_interval );
