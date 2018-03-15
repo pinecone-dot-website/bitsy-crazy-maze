@@ -1,4 +1,4 @@
-let markov = require( 'markov-chain-js/src/markov-chain' );
+const markov = require( 'markov-chain-js/src/markov-chain' );
 
 const markov_dialog = `The majority of games on this list mostly fall under the visual novel. People say that we're born with a purpose And that we're meant to make our dreams come true But if our dreams start to crumble they can bury us
 Got to dig yourself out and push on through. They say that nobody changes But I'm living proof that they do Because I found the answer And you can find the answer too They made me think I was crazy And that the pain was here to stay. I'll say it again in the land of the free Use your freedom of choice Your freedom of choice In ancient Rome There was a poem About a dog Who found two bones He picked at one He licked the other.
@@ -65,28 +65,23 @@ String.prototype.cm_trim = function() {
     // last in array is incomplete sentence
     sentences.pop();
     return sentences.join( ' ' );
-
-    //return sentences.join( ' --- ' );
 }
 
-
-module.exports = {
-    item: function() {
-        return new markov( {
-            max: 160,
-            order: 4,
-            source: markov_dialog
-        } );
-    },
-
-    sprite: function() {
-        return new markov( {
-            max: 260,
+class Markov {
+    constructor( max = 150 ) {
+        this.m = new markov( {
+            max: max,
             order: 4,
             source: markov_dialog
         } );
     }
+
+    generate() {
+        return this.m.generate().cm_trim();
+    }
 }
+
+module.exports = Markov;
 
 /*
 window.debug_markov = new markov( {

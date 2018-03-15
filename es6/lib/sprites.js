@@ -4,8 +4,9 @@
  * Has longer dialog
  */
 
-const sprite_tiles = [ 'b', 'c', 'd' ];
-const markov = require( './markov.js' );
+const sprite_tiles = [ 'b', 'c', 'd' ],
+      Markov = require( './markov.js' ),
+      markov = new Markov(280);
 
 module.exports = {
     /**
@@ -14,14 +15,12 @@ module.exports = {
     populate_dialogs: function() {
         sprite_tiles.forEach( ( e, i ) => {
             let id = `SPR_${i}`,
-                text = markov.sprite().generate().cm_trim();
+                text = markov.generate();
 
             dialog[ id ] = text;
             scriptInterpreter.Compile( id, text );
 
             //responsiveVoice.speak( text );
-
-            //console.log( 'populate_sprite_dialogs', id, dialog[ id ] );
         } );
     },
 

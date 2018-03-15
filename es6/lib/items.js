@@ -4,8 +4,9 @@
  * SHorter dialog
  */
 
-const item_tiles = [ 0, 1, 2, 3 ];
-const markov = require( './markov.js' );
+const item_tiles = [ 0, 1, 2, 3 ],
+      Markov = require( './markov.js' ),
+      markov = new Markov(160);
 
 module.exports = {
     /**
@@ -16,7 +17,7 @@ module.exports = {
         
         // this avoids any empty dialogs
         while( dialogs.length < item_tiles.length ){
-            let text = markov.item().generate().cm_trim();
+            let text = markov.generate();
             
             if(text.length){
                 dialogs.push(text);
